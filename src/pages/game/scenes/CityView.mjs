@@ -160,7 +160,11 @@ export default {
 		});
 	},
 	update() {
+		if (!thisCity) return;
+		
 		const queueList = document.querySelector('#production-queue > ul');
+		if (!queueList) return;
+		
 		if (queueList.querySelectorAll('li').length !== thisCity.queue.length) {
 			queueList.innerHTML = '';
 			thisCity.queue.forEach(({ faction, unitType }) => {

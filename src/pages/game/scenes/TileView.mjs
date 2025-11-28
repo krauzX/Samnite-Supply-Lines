@@ -134,13 +134,17 @@ export default {
 		this.inputManager = new InputManager(this);
 
 		this.events.on('sleep', () => {
-			dom.setAttribute('hidden', true);
-			dom.querySelectorAll('div').forEach((div) => div.innerHTML = '');
+			if (dom) {
+				dom.setAttribute('hidden', true);
+				dom.querySelectorAll('div').forEach((div) => div.innerHTML = '');
+			}
 			this.scene.wake('mainGameScene');
-			this.inputManager.disableKeyboardInput();
+			this.inputManager?.disableKeyboardInput();
 		}).on('shutdown', () => {
-			dom.setAttribute('hidden', true);
-			dom.querySelectorAll('div').forEach((div) => div.innerHTML = '');
+			if (dom) {
+				dom.setAttribute('hidden', true);
+				dom.querySelectorAll('div').forEach((div) => div.innerHTML = '');
+			}
 			this.scene.wake('mainGameScene');
 		});
 	},
