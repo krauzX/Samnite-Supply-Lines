@@ -192,7 +192,9 @@ export default class InputManager {
 				case 'd':
 					break;
 				case 'F':
-					currentGame.events.emit('key-pressed', 'build-farm');
+					if (!evt.altKey && !evt.ctrlKey) {
+						currentGame.events.emit('key-pressed', 'build-farm');
+					}
 					break;
 				case 'f':
 					break;
@@ -214,6 +216,9 @@ export default class InputManager {
 				case 'x':
 					break;
 				case 'c':
+					if (!evt.altKey && !evt.ctrlKey) {
+						currentGame.events.emit('center-map');
+					}
 					break;
 				case 'v':
 					break;

@@ -38,7 +38,6 @@ currentGame.events.on('unit-deactivated', hideActionSprites);
 currentGame.events.on('unit-moving', hideActionSprites);
 
 currentGame.events.on('zoom-in', () => {
-	console.log('zoom-in');
 	const currentZoom = MainGameScene.cameras.main.zoom;
 	let i = zoomLevels.indexOf(currentZoom);
 	if (i < zoomLevels.length - 1) {
@@ -56,7 +55,6 @@ currentGame.events.on('zoom-in', () => {
 	ShowActiveUnitHelpSprites();
 });
 currentGame.events.on('zoom-out', () => {
-	console.log('zoom-out');
 	const currentZoom = MainGameScene.cameras.main.zoom;
 	let i = zoomLevels.indexOf(currentZoom);
 	if (i > 0) {
@@ -154,10 +152,11 @@ function CenterCameraOnActiveUnit(event) {
 	if (globalThis.Phaser === undefined) {
 		return;
 	}
-	const hex = event.detail.unit.hex;
+	const hex = event.detail.unit?.hex ?? currentGame.activeUnit?.hex;
 	MainGameScene.cameras.main.pan(hex.x, hex.y, 500, 'Linear', true);
 }
 currentGame.events.on('unit-activated', CenterCameraOnActiveUnit);
+currentGame.events.on('center-map', CenterCameraOnActiveUnit);
 
 currentGame.events.on('unit-created', (evt) => {
 	registerUnitToView(evt.detail.unit, MainGameScene);
