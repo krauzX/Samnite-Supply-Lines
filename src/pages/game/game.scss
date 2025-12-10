@@ -1,15 +1,50 @@
+%full-screen {
+	padding: 0;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+}
+
 [y-page="pageGame"] {
-	&,
-	> * {
-		padding: 0;
-		position: fixed;
-		bottom: 0;
-		right: 0;
-		left: 0;
-		top: 0;
+	@extend %full-screen;
+
+	> canvas {
+		@extend %full-screen;
 	}
 
-	.game {
+	> .scene {
+		@extend %full-screen;
+		z-index: -1;
+
+		> .btn-close {
+			position: fixed;
+			bottom: auto;
+			left: auto;
+			right: 0;
+			top: 0;
+			$square: 50px;
+			width: $square;
+			height: $square;
+			line-height: $square;
+			text-align: center;
+			vertical-align: middle;
+			color: white;
+			cursor: pointer;
+		}
+
+		&:not([hidden]) {
+			z-index: 1;
+
+			~ .menu {
+				display: none;
+			}
+		}
+	}
+
+	> .game {
+		@extend %full-screen;
 		font-size: 40pt;
 
 		* {
@@ -17,12 +52,17 @@
 		}
 	}
 
+	.menu {
+		display: flex;
+	}
+
 	#zoom {
+		position: fixed;
 		z-index: 1;
 		bottom: auto;
+		right: 0;
 		left: auto;
 		top: max(10%, 50px);
-		display: flex;
 		flex-flow: column nowrap;
 
 		> button {
@@ -45,104 +85,29 @@
 		}
 	}
 
-	$max-left-menu-width: 0;
-
-	@media (orientation: landscape) {
-		$max-left-menu-width: 200px;
-
-		div.unit-actions-menu {
-			max-width: $max-left-menu-width;
-		}
-	}
-
-	div.unit-actions-menu {
+	div#action-menus {
 		position: fixed;
-
+		z-index: 1;
 		bottom: 0;
-		right: 800px;
-		left: 0;
-		background: forestgreen;
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: space-evenly;
-		padding: 20px 0;
-
-		@media (orientation: landscape) {
-			flex-flow: column nowrap;
-			bottom: 0;
-			right: auto;
-			left: 0;
-			top: 110px;
-			padding: 0 20px;
-		}
-
-		> button {
-			font-family: "Trebuchet MS", "Open Sans", "Helvetica Neue", sans-serif;
-			font-size: 40px;
-			border-radius: 100px;
-			padding: 5px 15px;
-			background: white;
-			border: 0;
-
-			&:not(:disabled) {
-				cursor: pointer;
-			}
-
-			&:has(> img) {
-				--circle: 64px;
-				height: var(--circle);
-				width: var(--circle);
-				padding: 0;
-				border-radius: var(--circle);
-				text-align: center;
-				align-self: center;
-				position: relative;
-
-				> img {
-					position: absolute;
-					left: 0;
-					top: 0;
-				}
-			}
-		}
-	}
-
-	%btn-close {
-		position: fixed;
-		bottom: auto;
-		left: auto;
 		right: 0;
-		top: 0;
-		$square: 50px;
-		width: $square;
-		height: $square;
-		line-height: $square;
-		text-align: center;
-		vertical-align: middle;
-		color: white;
-		cursor: pointer;
-	}
-
-	div#tile-menu {
-		background: white;
-		position: fixed;
-		bottom: 0;
-		left: math.div($max-left-menu-width, 2);
-		right: 400px;
-		top: auto;
-		margin: 0;
-		padding: 0.5em 2em;
-		border: 5px solid black;
-		border-radius: 50px;
-		display: flex;
+		left: 0;
 		flex-flow: row nowrap;
-		justify-content: space-evenly;
 
-		> button {
+		> div {
+			flex-basis: 50vw;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-evenly;
+			padding: 15px 5px;
+			background: green;
+		}
+
+		button {
 			padding: 2px 5px;
 			text-align: left;
 			font-family: "Trebuchet MS", "Open Sans", "Helvetica Neue", sans-serif;
 			font-size: 20px;
+			background: white;
 
 			> kbd {
 				font-size: 20pt;
@@ -159,10 +124,25 @@
 			&:not(:disabled) {
 				cursor: pointer;
 			}
-		}
 
-		&[hidden] {
-			display: none;
+			&:has(> img) {
+				--circle: 40px;
+				height: var(--circle);
+				width: var(--circle);
+				padding: 0;
+				border-radius: var(--circle);
+				text-align: center;
+				align-self: center;
+				position: relative;
+
+				> img {
+					width: 70.71%; // cos 45°
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
+			}
 		}
 	}
 
@@ -200,20 +180,9 @@
 				border-radius: 0.5em;
 			}
 		}
-
-		&:not([hidden]) + .game .unit-actions-menu {
-			display: none;
-		}
-
-		> .btn-close {
-			@extend %btn-close;
-		}
 	}
 
 	#city-view {
-		> .btn-close {
-			@extend %btn-close;
-		}
 	}
 
 	#production-queue {

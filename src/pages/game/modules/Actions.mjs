@@ -24,6 +24,7 @@ action = {
 class GameAction {
 	constructor(definition) {
 		[
+			'command',
 			'execute',
 			'isValid',
 			'label',
@@ -46,15 +47,21 @@ class GameAction {
 	}
 
 	execute(context) {
-		const fn = ActionExecutors[this['#execute']];
 		if (!this.isValid(context)) {
 			return false;
 		}
-		if (typeof fn === 'function') {
+		const fnExecute = ActionExecutors[this['#execute']];
+		if (typeof fnExecute === 'function') {
 			return Promise.try(() => {
 				currentGame.events.emit('doing-action');
 			}).then(() => {
-				fn(context);
+				fnExecute(context);
+			});
+		}
+		const fnCommand = ActionExecutors[this['#command']];
+		if (typeof fnCommand === 'function') {
+			return Promise.try(() => {
+				fnCommand(context);
 			});
 		}
 		console.warn(`No executor for action ${this.key}`);

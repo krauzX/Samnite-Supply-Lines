@@ -47,10 +47,14 @@ if (typeof globalThis.document === 'undefined') {
 let dom = null;
 
 currentGame.events.on('phaser-ready', () => {
-	dom ??= document.getElementById('tile-menu');
+	dom ??= {
+		menus: document.getElementById('action-menus'),
+		tileMenu: document.getElementById('tile-menu'),
+		unitMenu: document.getElementById('unit-menu'),
+	};
 });
 
-function buildActionButton(div, action) {
+function buildActionButton(div, context, action) {
 	const button = document.createElement('button');
 	if (currentGame.scenes.mainGame.textures.exists(`actions.${action.key}`)) {
 		button.append(currentGame.scenes.mainGame.textures.get(`actions.${action.key}`).getSourceImage());
@@ -74,11 +78,10 @@ function OpenUnitActionMenu(evt) {
 		return;
 	}
 
+	CloseUnitActionMenu();
+
 	// Build menu
 	// TODO: Move this to the Scene or View
-	currentGame.domContainer.innerHTML = '';
-	const div = document.createElement('div');
-	div.classList.add('unit-actions-menu');
 
 	const faction = currentGame.currentPlayer;
 	const context = {
@@ -88,16 +91,15 @@ function OpenUnitActionMenu(evt) {
 		faction,
 	};
 
-	ActionHandler.getAvailableActions(context).forEach(buildActionButton.bind(null, div));
-
-	currentGame.domContainer.appendChild(div);
-	currentGame.domContainer.style.zIndex = 1;
+	ActionHandler.getAvailableActions(context).forEach(buildActionButton.bind(null, dom.unitMenu, context));
+	dom.unitMenu.removeAttribute('hidden');
+	dom.menus.removeAttribute('hidden');
 }
 currentGame.events.on('unit-activated', OpenUnitActionMenu);
 
 function CloseUnitActionMenu() {
-	currentGame.domContainer.innerHTML = '';
-	currentGame.domContainer.style.zIndex = 0;
+	dom.unitMenu.innerHTML = '';
+	dom.unitMenu.setAttribute('hidden', true);
 }
 currentGame.events.on('unit-deactivated', CloseUnitActionMenu);
 currentGame.events.on('unit-moving', CloseUnitActionMenu);
@@ -123,7 +125,7 @@ function OpenTileMenu(evt) {
 		faction,
 	};
 
-	const possibleActions = ActionHandler.getAvailableActions(context)
+	const possibleActions = ActionHandler.getAvailableActions(context);
 
 	// No valid actions
 	if (possibleActions.length === 0) {
@@ -137,22 +139,23 @@ function OpenTileMenu(evt) {
 	}
 
 	// Build menu
-	possibleActions.forEach(buildActionButton.bind(null, dom));
+	possibleActions.forEach(buildActionButton.bind(null, dom.tileMenu, context));
 
 	// Add cancel button
 	const cancel = document.createElement('button');
 	cancel.innerHTML = 'Cancel';
 	cancel.addEventListener('click', CloseTileMenu);
 	cancel.style.pointerEvents = 'auto';
-	dom.appendChild(cancel);
+	dom.tileMenu.appendChild(cancel);
 
-	dom.style.zIndex = 1;
-	dom.removeAttribute('hidden');
+	dom.tileMenu.style.zIndex = 1;
+	dom.tileMenu.removeAttribute('hidden');
+	dom.menus.removeAttribute('hidden');
 }
 currentGame.events.on('hex-clicked', OpenTileMenu);
 
 function CloseTileMenu(evt) {
-	dom.setAttribute('hidden', true);
-	dom.innerHTML = '';
+	dom.tileMenu.setAttribute('hidden', true);
+	dom.tileMenu.innerHTML = '';
 }
 currentGame.events.on('esc-pressed', CloseTileMenu);

@@ -1,17 +1,20 @@
-<div id="zoom">
-	<button id="zoom-in">+</button>
-	<button id="zoom-out">-</button>
-</div>
-<div id="tile-view" hidden>
+<div id="tile-view" class="scene" hidden>
 	<div class="btn-close">✕</div>
 	<div id="terrain"></div>
 	<div id="improvements"></div>
 	<div id="laborers"></div>
 </div>
-<div id="tile-menu" hidden></div>
-<div id="city-view" hidden>
+<div id="city-view" class="scene" hidden>
 	<div class="btn-close">✕</div>
 	<div id="city-info"></div>
 	<div id="city-buildings"></div>
 	<div id="production-queue"></div>
+</div>
+<div class="menu" id="zoom">
+	<button id="zoom-in">+</button>
+	<button id="zoom-out">-</button>
+</div>
+<div class="menu" id="action-menus" hidden>
+	<div id="unit-menu" hidden></div>
+	<div id="tile-menu" hidden></div>
 </div>

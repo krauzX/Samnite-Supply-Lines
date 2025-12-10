@@ -70,7 +70,7 @@
 			"icon": "center.png",
 			"showIn": ["unit-actions-menu"],
 			"isValid": "currentPlayerTurn",
-			"execute": "centerMap"
+			"command": "centerMap"
 		}
 	],
 	"improvements": {
