@@ -110,7 +110,7 @@ currentGame.events.on('doing-action', () => {
 });
 
 function OpenTileMenu(evt) {
-	const hex = evt.detail?.hex || evt.detail?.unit?.hex;
+	const hex = evt.detail?.hex;
 	if (!Hex.isHex(hex) || !Tile.isTile(hex.tile)) return;
 	if (!FogOfWar.isHexExplored(currentGame.players[0], hex)) return;
 

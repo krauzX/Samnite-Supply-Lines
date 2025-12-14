@@ -175,7 +175,9 @@ function CenterCameraOnActiveUnit(event) {
 currentGame.events.on('unit-activated', (evt) => {
 	hideAllActionSprites();
 	ShowActiveUnitHelpSprites(evt);
-	CenterCameraOnActiveUnit(evt);
+	if (!evt.detail?.skipCentering) {
+		CenterCameraOnActiveUnit(evt);
+	}
 });
 
 currentGame.events.on('center-map', (evt) => {
@@ -344,11 +346,17 @@ export default {
 		});
 		this.events.on('resume', () => {
 			currentGame.scenes.wake('mainControls');
-			currentGame.currentPlayer.activateUnit();
+			currentGame.events.emit('unit-activated', {
+				unit: currentGame.activeUnit,
+				skipCentering: true,
+			});
 			this.inputManager.enableKeyboardInput();
 		}).on('wake', () => {
 			currentGame.scenes.wake('mainControls');
-			currentGame.currentPlayer.activateUnit();
+			currentGame.events.emit('unit-activated', {
+				unit: currentGame.activeUnit,
+				skipCentering: true,
+			});
 			this.inputManager.enableKeyboardInput();
 		});
 
