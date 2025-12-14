@@ -146,7 +146,9 @@ function OpenTileMenu(evt) {
 	// Add cancel button
 	const cancel = document.createElement('button');
 	cancel.innerHTML = 'Cancel';
-	cancel.addEventListener('click', CloseTileMenu);
+	cancel.addEventListener('click', () => {
+		currentGame.events.emit('esc-pressed');
+	});
 	cancel.style.pointerEvents = 'auto';
 	dom.tileMenu.appendChild(cancel);
 

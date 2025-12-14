@@ -148,10 +148,6 @@ export function ShowActiveUnitHelpSprites(event) {
 		}
 	});
 }
-currentGame.events.on('unit-activated', (evt) => {
-	hideAllActionSprites();
-	ShowActiveUnitHelpSprites(evt);
-});
 
 currentGame.events.on('hex-clicked', (evt) => {
 	// Highlight the clicked tile
@@ -167,17 +163,25 @@ function hideActiveTileSprite() {
 	ActionSprites.spriteOnActiveTile?.setActive(false).setPosition(offscreen, offscreen).setDepth(GameConfig.depths.offscreen);
 }
 currentGame.events.on('doing-action', hideActiveTileSprite);
-currentGame.events.on('center-map', hideActiveTileSprite);
+currentGame.events.on('esc-pressed', hideActiveTileSprite);
 
 function CenterCameraOnActiveUnit(event) {
 	if (globalThis.Phaser === undefined) {
 		return;
 	}
-	const hex = event.detail.unit?.hex ?? currentGame.activeUnit?.hex;
+	const hex = event?.detail?.unit?.hex ?? currentGame.activeUnit?.hex;
 	MainGameScene.cameras.main.pan(hex.x, hex.y, 500, 'Linear', true);
 }
-currentGame.events.on('unit-activated', CenterCameraOnActiveUnit);
-currentGame.events.on('center-map', CenterCameraOnActiveUnit);
+currentGame.events.on('unit-activated', (evt) => {
+	hideAllActionSprites();
+	ShowActiveUnitHelpSprites(evt);
+	CenterCameraOnActiveUnit(evt);
+});
+
+currentGame.events.on('center-map', (evt) => {
+	hideActiveTileSprite();
+	CenterCameraOnActiveUnit(evt);
+});
 
 currentGame.events.on('unit-created', (evt) => {
 	registerUnitToView(evt.detail.unit, MainGameScene);
