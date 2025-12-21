@@ -12,6 +12,10 @@ body:has([y-page="home"]) {
 		margin-top: 1em;
 	}
 
+	:is(p, ol, ul) + :where(p, ol, ul) {
+		margin-top: 0;
+	}
+
 	> p:last-of-type {
 		flex-grow: 1;
 	}
