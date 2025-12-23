@@ -112,34 +112,37 @@ export default class MainMenu extends Phaser.Scene {
         width,
         height,
       );
+      
+      // Make both graphics and text interactive for better hit detection
+      bg.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
       text.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
 
-      text.on("pointerover", () => {
+      const onHover = () => {
         bg.clear();
         bg.fillStyle(0x7b2cbf, 1);
         bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         bg.lineStyle(3, 0xe94560, 1);
         bg.strokeRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         text.setScale(1.05);
-      });
+      };
 
-      text.on("pointerout", () => {
+      const onOut = () => {
         bg.clear();
         bg.fillStyle(0x533483, 1);
         bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         bg.lineStyle(2, 0x7b2cbf, 1);
         bg.strokeRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         text.setScale(1.0);
-      });
+      };
 
-      text.on("pointerdown", () => {
+      const onDown = () => {
         bg.clear();
         bg.fillStyle(0x9d4edd, 1);
         bg.fillRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         text.setScale(0.98);
-      });
+      };
 
-      text.on("pointerup", () => {
+      const onUp = () => {
         onClick();
         bg.clear();
         bg.fillStyle(0x7b2cbf, 1);
@@ -147,7 +150,18 @@ export default class MainMenu extends Phaser.Scene {
         bg.lineStyle(3, 0xe94560, 1);
         bg.strokeRoundedRect(x - width / 2, y - height / 2, width, height, 8);
         text.setScale(1.05);
-      });
+      };
+
+      // Apply events to both graphics and text
+      bg.on("pointerover", onHover);
+      bg.on("pointerout", onOut);
+      bg.on("pointerdown", onDown);
+      bg.on("pointerup", onUp);
+      
+      text.on("pointerover", onHover);
+      text.on("pointerout", onOut);
+      text.on("pointerdown", onDown);
+      text.on("pointerup", onUp);
     }
 
     return container;

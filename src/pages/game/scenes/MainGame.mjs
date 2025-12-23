@@ -305,6 +305,7 @@ export default {
       });
 
     this.game.events.emit(`scene-created-${sceneKey}`);
+    currentGame.startRound();
   },
   update() {
     this.inputManager.update();

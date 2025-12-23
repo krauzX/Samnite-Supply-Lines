@@ -13,17 +13,31 @@ export default class TitleScreen extends Phaser.Scene {
   create() {
     const { width, height } = this.cameras.main;
 
-    this.add
-      .image(width / 2, height / 2, "title-background")
-      .setDisplaySize(width, height);
+    // Create gradient background instead of image
+    const graphics = this.add.graphics();
+    graphics.fillGradientStyle(0x0a1628, 0x0a1628, 0x1a2f4a, 0x2a4a6a, 1);
+    graphics.fillRect(0, 0, width, height);
 
-    const logo = this.add
-      .image(width / 2, height / 3, "game-logo")
-      .setOrigin(0.5);
-    const maxLogoWidth = width * 0.8;
-    if (logo.width > maxLogoWidth) {
-      logo.setScale(maxLogoWidth / logo.width);
+    // Add decorative hex pattern
+    const hexSize = 40;
+    for (let y = 0; y < height; y += hexSize * 1.5) {
+      for (let x = 0; x < width; x += hexSize * 2) {
+        graphics.lineStyle(1, 0x3a5a7a, 0.3);
+        graphics.strokeCircle(x, y, hexSize / 2);
+      }
     }
+
+    // Create text-based logo instead of image
+    this.add
+      .text(width / 2, height / 3, "EMPIRES 4X", {
+        fontSize: "96px",
+        fontFamily: "Georgia, serif",
+        color: "#e94560",
+        stroke: "#000000",
+        strokeThickness: 8,
+        fontStyle: "bold",
+      })
+      .setOrigin(0.5);
 
     this.add
       .text(width / 2, height * 0.65, "Loading...", {
